@@ -1,0 +1,154 @@
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  Shield, 
+  Users, 
+  Zap, 
+  Code,
+  Lock,
+  BarChart,
+  Globe,
+  ChevronRight
+} from 'lucide-react';
+
+const valueData = [
+  {
+    id: 'security',
+    icon: Shield,
+    title: 'Security First',
+    shortDesc: 'Uncompromising security standards',
+    longDesc: 'We prioritize the security of our users' assets and data above all else. Our multi-layered security approach includes regular audits, real-time monitoring, and advanced threat detection systems.',
+    highlights: [
+      'Regular security audits',
+      'Multi-layer protection',
+      'Real-time threat monitoring',
+      'Secure key management'
+    ],
+    color: 'from-blue-500 to-indigo-500'
+  },
+  {
+    id: 'community',
+    icon: Users,
+    title: 'Community Driven',
+    shortDesc: 'Built by traders, for traders',
+    longDesc: 'Our platform is shaped by the needs and feedback of our community. We believe in transparent communication and collaborative development to create the best possible trading experience.',
+    highlights: [
+      'Active community engagement',
+      'Transparent communication',
+      'User-driven development',
+      'Regular updates'
+    ],
+    color: 'from-purple-500 to-pink-500'
+  },
+  {
+    id: 'innovation',
+    icon: Zap,
+    title: 'Continuous Innovation',
+    shortDesc: 'Pushing technological boundaries',
+    longDesc: 'We constantly push the boundaries of what's possible in crypto trading through cutting-edge AI technology and innovative solutions that give our users a competitive edge.',
+    highlights: [
+      'AI-powered trading',
+      'Advanced algorithms',
+      'Performance optimization',
+      'Feature innovation'
+    ],
+    color: 'from-green-500 to-teal-500'
+  },
+  {
+    id: 'integrity',
+    icon: Lock,
+    title: 'Integrity & Trust',
+    shortDesc: 'Building lasting relationships',
+    longDesc: 'Trust is earned through consistent delivery of reliable service and unwavering commitment to ethical practices. We maintain the highest standards of integrity in all our operations.',
+    highlights: [
+      'Ethical practices',
+      'Transparent operations',
+      'Reliable service',
+      'Fair trading'
+    ],
+    color: 'from-yellow-500 to-orange-500'
+  }
+];
+
+const ValueCard = ({ value, isExpanded, onToggle }) => {
+  const Icon = value.icon;
+  
+  return (
+    <motion.div
+      layout
+      className="bg-gray-800 rounded-xl overflow-hidden"
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.3 }}
+    >
+      <motion.button
+        onClick={onToggle}
+        className="w-full text-left p-6"
+        whileHover={{ scale: 1.02 }}
+        transition={{ duration: 0.2 }}
+      >
+        <div className="flex items-start space-x-4">
+          <div className={`p-3 rounded-lg bg-gradient-to-br ${value.color}`}>
+            <Icon className="w-6 h-6 text-white" />
+          </div>
+          <div className="flex-1">
+            <h4 className="text-xl font-bold text-white mb-2">{value.title}</h4>
+            <p className="text-gray-400">{value.shortDesc}</p>
+          </div>
+          <ChevronRight 
+            className={`w-6 h-6 text-gray-400 transform transition-transform duration-300
+                     ${isExpanded ? 'rotate-90' : ''}`}
+          />
+        </div>
+      </motion.button>
+
+      <AnimatePresence>
+        {isExpanded && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <div className="px-6 pb-6">
+              <p className="text-gray-300 mb-4">{value.longDesc}</p>
+              <div className="space-y-2">
+                {value.highlights.map((highlight, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                    className="flex items-center space-x-2"
+                  >
+                    <div className={`w-2 h-2 rounded-full bg-gradient-to-br ${value.color}`} />
+                    <span className="text-gray-300">{highlight}</span>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
+  );
+};
+
+const MissionValues = () => {
+  const [expandedValue, setExpandedValue] = useState(null);
+
+  return (
+    <div className="space-y-6">
+      {valueData.map((value) => (
+        <ValueCard
+          key={value.id}
+          value={value}
+          isExpanded={expandedValue === value.id}
+          onToggle={() => setExpandedValue(expandedValue === value.id ? null : value.id)}
+        />
+      ))}
+    </div>
+  );
+};
+
+export default MissionValues;

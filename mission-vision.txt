@@ -1,0 +1,114 @@
+import React from 'react';
+import { motion } from 'framer-motion';
+import { Target, TrendingUp, Shield, Zap } from 'lucide-react';
+
+const VisionPoint = ({ icon: Icon, title, description, index }) => (
+  <motion.div
+    initial={{ opacity: 0, x: -20 }}
+    animate={{ opacity: 1, x: 0 }}
+    transition={{ delay: index * 0.1 }}
+    className="flex items-start space-x-4"
+  >
+    <div className="p-3 bg-blue-500 bg-opacity-20 rounded-lg">
+      <Icon className="w-6 h-6 text-blue-400" />
+    </div>
+    <div>
+      <h4 className="text-lg font-semibold text-white mb-2">{title}</h4>
+      <p className="text-gray-300">{description}</p>
+    </div>
+  </motion.div>
+);
+
+const MissionVision = () => {
+  const visionPoints = [
+    {
+      icon: Target,
+      title: 'Innovative Trading Solutions',
+      description: 'Pioneering the integration of artificial intelligence with cryptocurrency trading, creating sophisticated tools that adapt to market dynamics.'
+    },
+    {
+      icon: TrendingUp,
+      title: 'Market Leadership',
+      description: 'Setting new standards in automated trading by continuously evolving our technology and maintaining a competitive edge in the crypto space.'
+    },
+    {
+      icon: Shield,
+      title: 'Security Excellence',
+      description: 'Ensuring the highest level of security for our users through advanced protection mechanisms and regular security audits.'
+    },
+    {
+      icon: Zap,
+      title: 'Performance Optimization',
+      description: 'Delivering lightning-fast execution and optimal trading performance through cutting-edge technology and infrastructure.'
+    }
+  ];
+
+  return (
+    <div className="bg-gray-800 bg-opacity-50 backdrop-blur-sm rounded-xl p-8">
+      {/* Vision Statement */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="mb-12 text-center"
+      >
+        <h3 className="text-2xl font-bold text-white mb-4">
+          Revolutionizing Cryptocurrency Trading
+        </h3>
+        <p className="text-gray-300 max-w-3xl mx-auto">
+          We envision a future where sophisticated AI-powered trading tools are accessible
+          to everyone, revolutionizing how people interact with cryptocurrency markets.
+          Through innovation, security, and excellence, we're building the next generation
+          of trading technology.
+        </p>
+      </motion.div>
+
+      {/* Vision Points */}
+      <div className="grid md:grid-cols-2 gap-8">
+        {visionPoints.map((point, index) => (
+          <VisionPoint key={index} {...point} index={index} />
+        ))}
+      </div>
+
+      {/* Vision Metrics */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.4 }}
+        className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-6"
+      >
+        {[
+          { label: 'Market Analysis', value: '24/7' },
+          { label: 'Trading Pairs', value: '100+' },
+          { label: 'Success Rate', value: '99.9%' },
+          { label: 'Response Time', value: '<50ms' }
+        ].map(({ label, value }, index) => (
+          <div
+            key={index}
+            className="text-center p-4 rounded-lg bg-gray-900 bg-opacity-50"
+          >
+            <div className="text-2xl font-bold text-blue-400 mb-1">{value}</div>
+            <div className="text-sm text-gray-400">{label}</div>
+          </div>
+        ))}
+      </motion.div>
+
+      {/* Call to Action */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.6 }}
+        className="mt-12 text-center"
+      >
+        <button className="px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg
+                        transform transition-all duration-300 hover:scale-105">
+          Join Our Vision
+        </button>
+        <p className="mt-4 text-sm text-gray-400">
+          Be part of the revolution in cryptocurrency trading
+        </p>
+      </motion.div>
+    </div>
+  );
+};
+
+export default MissionVision;

@@ -1,0 +1,155 @@
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Bot, Zap, RefreshCw, Shield, ChevronRight } from 'lucide-react';
+import PlatformFeature from './PlatformFeature';
+import PlatformStats from './PlatformStats';
+
+const featureData = [
+  {
+    id: 'sniper-bot',
+    title: 'Sniper Bot',
+    description: 'Advanced AI-powered token detection and trading bot with anti-rug protection.',
+    icon: Bot,
+    features: [
+      'Real-time contract analysis',
+      'Machine learning-based risk assessment',
+      'Anti-bot detection evasion',
+      'Multi-chain monitoring',
+      'Automated trading execution'
+    ],
+    background: 'bg-gradient-to-br from-blue-600 to-purple-600'
+  },
+  {
+    id: 'flash-loan',
+    title: 'Flash Loan Arbitrage Bot',
+    description: 'Multi-chain, multi-exchange arbitrage bot leveraging flash loans for maximum profits.',
+    icon: Zap,
+    features: [
+      'Cross-chain monitoring',
+      'Price disparity detection',
+      'Automated execution',
+      'Risk management',
+      'Profit optimization'
+    ],
+    background: 'bg-gradient-to-br from-purple-600 to-pink-600'
+  }
+];
+
+const PlatformContainer = () => {
+  const [selectedFeature, setSelectedFeature] = useState(null);
+  const [stats, setStats] = useState({
+    totalTrades: 0,
+    successRate: 0,
+    avgProfit: 0,
+    activeUsers: 0
+  });
+
+  // Simulated stats update
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setStats({
+        totalTrades: Math.floor(Math.random() * 10000) + 50000,
+        successRate: (Math.random() * 10 + 89).toFixed(1),
+        avgProfit: (Math.random() * 100 + 200).toFixed(2),
+        activeUsers: Math.floor(Math.random() * 1000) + 5000
+      });
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div className="min-h-screen relative overflow-hidden bg-gray-900">
+      {/* Background Effects */}
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 bg-gradient-to-b from-gray-900 via-blue-900/20 to-purple-900/20 opacity-50" />
+        <div className="absolute inset-0 bg-grid-pattern opacity-10" />
+      </div>
+
+      {/* Content */}
+      <div className="relative container mx-auto px-4 py-20">
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-16"
+        >
+          <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+            AI-Powered Trading Platform
+          </h2>
+          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+            Advanced trading bots powered by artificial intelligence, designed to give you the edge in cryptocurrency trading.
+          </p>
+        </motion.div>
+
+        {/* Stats */}
+        <PlatformStats stats={stats} />
+
+        {/* Features Grid */}
+        <div className="grid md:grid-cols-2 gap-8 mt-16">
+          {featureData.map((feature, index) => (
+            <motion.div
+              key={feature.id}
+              initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: index * 0.2 }}
+            >
+              <PlatformFeature
+                {...feature}
+                isSelected={selectedFeature === feature.id}
+                onSelect={() => setSelectedFeature(feature.id)}
+              />
+            </motion.div>
+          ))}
+        </div>
+
+        {/* CTA Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.8 }}
+          className="text-center mt-20"
+        >
+          <button className="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg text-white font-bold text-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105">
+            Get Started with $SNIPE
+          </button>
+          <p className="mt-4 text-gray-400">
+            Unlock the full potential of AI-powered trading
+          </p>
+        </motion.div>
+      </div>
+
+      {/* Animated Background Elements */}
+      <div className="absolute inset-0 pointer-events-none">
+        {[...Array(20)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute bg-blue-500 rounded-full opacity-20 blur-xl"
+            initial={{
+              x: Math.random() * window.innerWidth,
+              y: Math.random() * window.innerHeight,
+              scale: Math.random() * 0.5 + 0.5
+            }}
+            animate={{
+              x: Math.random() * window.innerWidth,
+              y: Math.random() * window.innerHeight,
+              scale: Math.random() * 0.5 + 0.5
+            }}
+            transition={{
+              duration: Math.random() * 10 + 20,
+              repeat: Infinity,
+              repeatType: 'reverse'
+            }}
+            style={{
+              width: Math.random() * 200 + 100,
+              height: Math.random() * 200 + 100
+            }}
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default PlatformContainer;

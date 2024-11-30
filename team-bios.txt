@@ -1,0 +1,137 @@
+import React from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Star, Award, Briefcase, GraduationCap } from 'lucide-react';
+
+const BioSection = ({ title, icon: Icon, children }) => (
+  <div className="mb-6">
+    <div className="flex items-center space-x-2 mb-3">
+      <Icon className="w-5 h-5 text-blue-400" />
+      <h4 className="text-lg font-semibold text-white">{title}</h4>
+    </div>
+    <div className="text-gray-300 pl-7">{children}</div>
+  </div>
+);
+
+const TeamBios = ({ teamData, selectedMember }) => {
+  const selectedTeamMember = teamData.find(member => member.id === selectedMember);
+
+  const bioContent = {
+    'Alpha': {
+      background: "Leading developer with extensive experience in blockchain technology and AI integration. Specializes in creating secure, efficient smart contracts and developing cutting-edge trading algorithms.",
+      achievements: [
+        "Developed multiple successful DeFi platforms",
+        "Created innovative AI-powered trading systems",
+        "Led security audits for major blockchain projects"
+      ],
+      experience: "10+ years in blockchain development, 5+ years in AI/ML",
+      education: "Advanced degrees in Computer Science and Artificial Intelligence"
+    },
+    'Omega': {
+      background: "AI specialist focused on developing and implementing machine learning models for cryptocurrency trading. Expert in neural networks and predictive analytics.",
+      achievements: [
+        "Published research on AI in cryptocurrency markets",
+        "Developed proprietary trading algorithms",
+        "Successfully predicted multiple market trends"
+      ],
+      experience: "8+ years in machine learning, 6+ years in crypto trading",
+      education: "PhD in Machine Learning, specialization in Financial Technologies"
+    },
+    'Delta': {
+      background: "Security expert with a focus on smart contract auditing and blockchain security. Specialized in identifying and preventing potential vulnerabilities.",
+      achievements: [
+        "Prevented multiple high-profile smart contract exploits",
+        "Developed security frameworks for DeFi projects",
+        "Led security workshops for blockchain developers"
+      ],
+      experience: "12+ years in cybersecurity, 7+ years in blockchain security",
+      education: "Master's in Cybersecurity, multiple security certifications"
+    },
+    'Sigma': {
+      background: "Expert trading strategist combining traditional financial expertise with cutting-edge technology. Specialized in developing and implementing automated trading strategies.",
+      achievements: [
+        "Developed successful algorithmic trading systems",
+        "Managed large-scale crypto portfolios",
+        "Created risk management frameworks"
+      ],
+      experience: "15+ years in financial markets, 8+ years in crypto trading",
+      education: "Master's in Financial Engineering, Trading certifications"
+    }
+  };
+
+  return (
+    <AnimatePresence mode="wait">
+      {selectedTeamMember && (
+        <motion.div
+          key={selectedTeamMember.id}
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: 'auto' }}
+          exit={{ opacity: 0, height: 0 }}
+          transition={{ duration: 0.3 }}
+          className="mt-12"
+        >
+          <div className="bg-gray-800 bg-opacity-50 backdrop-blur-sm rounded-lg p-8">
+            {/* Header */}
+            <div className="flex items-center space-x-4 mb-8">
+              <motion.div
+                className="relative w-20 h-20 rounded-full overflow-hidden"
+                whileHover={{ scale: 1.1 }}
+              >
+                <div className={`absolute inset-0 ${selectedTeamMember.background} opacity-50`} />
+                <img
+                  src={selectedTeamMember.avatar}
+                  alt={selectedTeamMember.codename}
+                  className="relative z-10 w-full h-full object-cover"
+                />
+              </motion.div>
+              <div>
+                <h3 className="text-2xl font-bold text-white">
+                  {selectedTeamMember.codename}
+                </h3>
+                <p className="text-gray-400">{selectedTeamMember.role}</p>
+              </div>
+            </div>
+
+            {/* Bio Content */}
+            <div className="space-y-6">
+              <BioSection title="Background" icon={Star}>
+                {bioContent[selectedTeamMember.codename].background}
+              </BioSection>
+
+              <BioSection title="Key Achievements" icon={Award}>
+                <ul className="list-none space-y-2">
+                  {bioContent[selectedTeamMember.codename].achievements.map((achievement, index) => (
+                    <motion.li
+                      key={index}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                      className="flex items-center space-x-2"
+                    >
+                      <div className="w-1.5 h-1.5 rounded-full bg-blue-400" />
+                      <span>{achievement}</span>
+                    </motion.li>
+                  ))}
+                </ul>
+              </BioSection>
+
+              <BioSection title="Experience" icon={Briefcase}>
+                {bioContent[selectedTeamMember.codename].experience}
+              </BioSection>
+
+              <BioSection title="Education" icon={GraduationCap}>
+                {bioContent[selectedTeamMember.codename].education}
+              </BioSection>
+            </div>
+
+            {/* Background Animation */}
+            <div className="absolute inset-0 pointer-events-none">
+              <div className={`absolute inset-0 ${selectedTeamMember.background} opacity-5`} />
+            </div>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+};
+
+export default TeamBios;

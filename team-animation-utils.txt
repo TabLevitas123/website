@@ -1,0 +1,236 @@
+import { logger } from '../utils/logger';
+
+// Animation variants for consistent motion
+export const fadeInVariants = {
+  hidden: { 
+    opacity: 0,
+    transition: {
+      type: 'tween',
+      duration: 0.3,
+      ease: 'easeOut'
+    }
+  },
+  visible: { 
+    opacity: 1,
+    transition: {
+      type: 'tween',
+      duration: 0.3,
+      ease: 'easeOut'
+    }
+  }
+};
+
+export const slideUpVariants = {
+  hidden: { 
+    opacity: 0, 
+    y: 20,
+    transition: {
+      type: 'spring',
+      stiffness: 100,
+      damping: 15
+    }
+  },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    transition: {
+      type: 'spring',
+      stiffness: 100,
+      damping: 15
+    }
+  }
+};
+
+export const staggerContainerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.2
+    }
+  }
+};
+
+// Animation presets for different elements
+export const animationPresets = {
+  teamMemberCard: {
+    initial: {
+      opacity: 0,
+      y: 50,
+      scale: 0.95
+    },
+    animate: {
+      opacity: 1,
+      y: 0,
+      scale: 1
+    },
+    exit: {
+      opacity: 0,
+      y: -20,
+      scale: 0.95
+    },
+    transition: {
+      type: 'spring',
+      stiffness: 100,
+      damping: 15
+    }
+  },
+  bioPicHover: {
+    initial: {
+      scale: 1,
+      rotate: 0
+    },
+    hover: {
+      scale: 1.05,
+      rotate: 3,
+      transition: {
+        type: 'spring',
+        stiffness: 300,
+        damping: 20
+      }
+    }
+  },
+  sectionHeader: {
+    initial: {
+      opacity: 0,
+      y: -20
+    },
+    animate: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        type: 'spring',
+        stiffness: 100,
+        damping: 15
+      }
+    }
+  }
+};
+
+// Performance optimization utilities
+export const optimizeAnimations = (shouldReduceMotion = false) => {
+  try {
+    if (shouldReduceMotion) {
+      return {
+        transition: {
+          duration: 0
+        }
+      };
+    }
+    return {};
+  } catch (error) {
+    logger.error('Error optimizing animations:', error);
+    return {};
+  }
+};
+
+// Animation sequence generator
+export const createAnimationSequence = (elements, baseDelay = 0.1) => {
+  try {
+    return elements.map((element, index) => ({
+      ...element,
+      transition: {
+        delay: baseDelay * index,
+        duration: 0.5,
+        ease: 'easeOut'
+      }
+    }));
+  } catch (error) {
+    logger.error('Error creating animation sequence:', error);
+    return elements;
+  }
+};
+
+// Scroll-based animation utilities
+export const createScrollAnimation = (threshold = 0.1) => ({
+  opacity: 0,
+  y: 20,
+  transition: { duration: 0.5 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, amount: threshold }
+});
+
+// Background animation utilities
+export const backgroundAnimations = {
+  particles: {
+    animate: {
+      scale: [1, 1.2, 1],
+      opacity: [0.3, 0.6, 0.3],
+      transition: {
+        duration: 3,
+        repeat: Infinity,
+        ease: 'easeInOut'
+      }
+    }
+  },
+  gradient: {
+    animate: {
+      background: [
+        'linear-gradient(45deg, rgba(59,130,246,0.1), rgba(147,51,234,0.1))',
+        'linear-gradient(45deg, rgba(147,51,234,0.1), rgba(59,130,246,0.1))'
+      ],
+      transition: {
+        duration: 5,
+        repeat: Infinity,
+        ease: 'linear'
+      }
+    }
+  }
+};
+
+// Error handling for animations
+export const handleAnimationError = (error, fallbackAnimation = {}) => {
+  logger.error('Animation error:', error);
+  return fallbackAnimation;
+};
+
+// Animation performance monitoring
+export const monitorAnimationPerformance = (animationId) => {
+  const startTime = performance.now();
+  
+  return {
+    end: () => {
+      const duration = performance.now() - startTime;
+      if (duration > 16.67) { // Over 60fps threshold
+        logger.warn(`Animation performance warning for ${animationId}:`, {
+          duration,
+          fps: 1000 / duration
+        });
+      }
+      return duration;
+    }
+  };
+};
+
+// Utility for managing multiple animation states
+export class AnimationStateManager {
+  constructor() {
+    this.states = new Map();
+  }
+
+  setState(key, value) {
+    try {
+      this.states.set(key, value);
+    } catch (error) {
+      logger.error('Error setting animation state:', error);
+    }
+  }
+
+  getState(key) {
+    try {
+      return this.states.get(key);
+    } catch (error) {
+      logger.error('Error getting animation state:', error);
+      return null;
+    }
+  }
+
+  clearState(key) {
+    try {
+      this.states.delete(key);
+    } catch (error) {
+      logger.error('Error clearing animation state:', error);
+    }
+  }
+};

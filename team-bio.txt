@@ -1,0 +1,135 @@
+import React from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { MapPin, Quote, Award, Code, Shield, Brain } from 'lucide-react';
+
+const skillIconMap = {
+  'AI Development': Brain,
+  'Smart Contracts': Code,
+  'Security': Shield,
+  'Architecture': Code,
+  'Strategy': Brain,
+  'Communication': Quote
+};
+
+interface SkillBadgeProps {
+  skill: string;
+  index: number;
+}
+
+const SkillBadge: React.FC<SkillBadgeProps> = ({ skill, index }) => {
+  const Icon = skillIconMap[skill] || Code;
+  
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.8 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ delay: index * 0.1 }}
+      className="flex items-center space-x-2 px-3 py-1 rounded-full 
+                 bg-gradient-to-r from-blue-500/10 to-purple-500/10 
+                 border border-blue-500/20"
+    >
+      <Icon className="w-4 h-4 text-blue-400" />
+      <span className="text-sm text-gray-300">{skill}</span>
+    </motion.div>
+  );
+};
+
+interface TeamBioProps {
+  member: {
+    codename: string;
+    location: string;
+    role: string;
+    bio: string;
+    quote: string;
+    skills: string[];
+    background: string;
+  };
+  isVisible: boolean;
+}
+
+const TeamBio: React.FC<TeamBioProps> = ({ member, isVisible }) => {
+  return (
+    <AnimatePresence>
+      {isVisible && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          className="bg-gray-900/50 backdrop-blur-sm rounded-xl p-8 border border-gray-800"
+        >
+          {/* Header */}
+          <div className="flex items-start justify-between mb-6">
+            <div>
+              <motion.h3 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 
+                         bg-clip-text text-transparent"
+              >
+                {member.codename}
+              </motion.h3>
+              <div className="flex items-center space-x-2 mt-1">
+                <MapPin className="w-4 h-4 text-gray-500" />
+                <span className="text-sm text-gray-400">{member.location}</span>
+              </div>
+            </div>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="px-4 py-1 rounded-full bg-blue-500/10 border border-blue-500/20"
+            >
+              <span className="text-sm text-blue-400">{member.role}</span>
+            </motion.div>
+          </div>
+
+          {/* Bio Content */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2 }}
+            className="space-y-6"
+          >
+            {/* Main Bio */}
+            <p className="text-gray-300 leading-relaxed">{member.bio}</p>
+
+            {/* Quote */}
+            <div className="relative mt-6 px-6">
+              <Quote className="absolute -left-2 -top-2 w-6 h-6 text-blue-500/20" />
+              <p className="text-lg text-gray-400 italic">{member.quote}</p>
+              <Quote className="absolute -right-2 bottom-0 w-6 h-6 text-blue-500/20 transform rotate-180" />
+            </div>
+
+            {/* Skills */}
+            <div className="mt-6">
+              <h4 className="text-sm font-medium text-gray-400 mb-3">Expertise</h4>
+              <div className="flex flex-wrap gap-2">
+                {member.skills.map((skill, index) => (
+                  <SkillBadge key={skill} skill={skill} index={index} />
+                ))}
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Background Animation */}
+          <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-xl">
+            <div className={`absolute inset-0 ${member.background} opacity-5`} />
+            <motion.div
+              animate={{
+                opacity: [0.1, 0.2, 0.1],
+                scale: [1, 1.2, 1],
+              }}
+              transition={{
+                duration: 5,
+                repeat: Infinity,
+                repeatType: 'reverse'
+              }}
+              className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/10"
+            />
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+};
+
+export default TeamBio;

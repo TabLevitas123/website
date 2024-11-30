@@ -1,0 +1,186 @@
+import React from 'react';
+import { motion } from 'framer-motion';
+import { 
+  Clock, 
+  Code, 
+  Users, 
+  Award,
+  GitCommit,
+  Brain,
+  Shield,
+  Zap
+} from 'lucide-react';
+
+interface StatCardProps {
+  icon: React.ElementType;
+  label: string;
+  value: string;
+  delay?: number;
+  gradient?: string;
+}
+
+const StatCard: React.FC<StatCardProps> = ({ 
+  icon: Icon, 
+  label, 
+  value, 
+  delay = 0,
+  gradient = 'from-blue-500 to-purple-500'
+}) => (
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ delay }}
+    className="bg-gray-800/50 backdrop-blur-sm rounded-lg p-6 border border-gray-700/50"
+  >
+    <div className={`w-12 h-12 rounded-lg mb-4 flex items-center justify-center
+                    bg-gradient-to-br ${gradient} bg-opacity-10`}>
+      <Icon className="w-6 h-6 text-blue-400" />
+    </div>
+    <div className="space-y-1">
+      <h4 className="text-2xl font-bold text-white">{value}</h4>
+      <p className="text-sm text-gray-400">{label}</p>
+    </div>
+  </motion.div>
+);
+
+interface AchievementProps {
+  icon: React.ElementType;
+  title: string;
+  description: string;
+  index: number;
+}
+
+const Achievement: React.FC<AchievementProps> = ({ icon: Icon, title, description, index }) => (
+  <motion.div
+    initial={{ opacity: 0, x: -20 }}
+    animate={{ opacity: 1, x: 0 }}
+    transition={{ delay: index * 0.1 }}
+    className="flex items-start space-x-4"
+  >
+    <div className="p-2 rounded-lg bg-blue-500/10">
+      <Icon className="w-5 h-5 text-blue-400" />
+    </div>
+    <div>
+      <h4 className="text-lg font-semibold text-white mb-1">{title}</h4>
+      <p className="text-sm text-gray-400">{description}</p>
+    </div>
+  </motion.div>
+);
+
+const TeamStats: React.FC = () => {
+  const stats = [
+    { 
+      icon: Code, 
+      label: 'Smart Contracts Deployed',
+      value: '150+',
+      gradient: 'from-blue-500 to-indigo-500'
+    },
+    { 
+      icon: Brain, 
+      label: 'AI Models Trained',
+      value: '25+',
+      gradient: 'from-purple-500 to-pink-500'
+    },
+    { 
+      icon: Shield, 
+      label: 'Security Audits',
+      value: '100%',
+      gradient: 'from-green-500 to-teal-500'
+    },
+    { 
+      icon: GitCommit, 
+      label: 'Commits',
+      value: '2.5K+',
+      gradient: 'from-yellow-500 to-orange-500'
+    }
+  ];
+
+  const achievements = [
+    {
+      icon: Zap,
+      title: 'Platform Innovation',
+      description: 'Pioneering AI-driven trading solutions with breakthrough technology'
+    },
+    {
+      icon: Shield,
+      title: 'Security Excellence',
+      description: 'Perfect track record in smart contract security and audit compliance'
+    },
+    {
+      icon: Users,
+      title: 'Community Growth',
+      description: 'Building and nurturing a thriving global community of traders'
+    },
+    {
+      icon: Award,
+      title: 'Technical Achievement',
+      description: 'Setting new standards in blockchain development and AI integration'
+    }
+  ];
+
+  return (
+    <div className="space-y-12">
+      {/* Stats Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {stats.map((stat, index) => (
+          <StatCard
+            key={stat.label}
+            icon={stat.icon}
+            label={stat.label}
+            value={stat.value}
+            delay={index * 0.1}
+            gradient={stat.gradient}
+          />
+        ))}
+      </div>
+
+      {/* Achievements Section */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.4 }}
+        className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-8 border border-gray-700/50"
+      >
+        <h3 className="text-xl font-bold text-white mb-8">Key Achievements</h3>
+        <div className="grid md:grid-cols-2 gap-8">
+          {achievements.map((achievement, index) => (
+            <Achievement
+              key={achievement.title}
+              {...achievement}
+              index={index}
+            />
+          ))}
+        </div>
+      </motion.div>
+
+      {/* Background Effects */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-500/5" />
+        {[...Array(20)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute bg-blue-500 rounded-full opacity-10 blur-xl"
+            animate={{
+              x: [0, Math.random() * 100 - 50],
+              y: [0, Math.random() * 100 - 50],
+              scale: [1, Math.random() * 0.5 + 0.5],
+            }}
+            transition={{
+              duration: Math.random() * 10 + 10,
+              repeat: Infinity,
+              repeatType: 'reverse',
+            }}
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              width: `${Math.random() * 200 + 100}px`,
+              height: `${Math.random() * 200 + 100}px`,
+            }}
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default TeamStats;

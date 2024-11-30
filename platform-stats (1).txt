@@ -1,0 +1,121 @@
+import React from 'react';
+import { motion } from 'framer-motion';
+import { Activity, TrendingUp, Users, ChartBar } from 'lucide-react';
+import { formatNumber, formatCurrency } from '@/utils/formatters';
+import { logger } from '@/utils/logger';
+
+interface Stats {
+  totalTrades: number;
+  successRate: number;
+  avgProfit: number;
+  activeUsers: number;
+}
+
+interface StatCardProps {
+  icon: React.ElementType;
+  label: string;
+  value: string | number;
+  unit?: string;
+  trend?: number;
+  index: number;
+  className?: string;
+}
+
+const StatCard: React.FC<StatCardProps> = ({
+  icon: Icon,
+  label,
+  value,
+  unit,
+  trend,
+  index,
+  className = ''
+}) => {
+  try {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: index * 0.1 }}
+        whileHover={{ y: -5 }}
+        className={`bg-gray-800 bg-opacity-50 backdrop-blur-sm rounded-lg p-6 ${className}`}
+      >
+        <div className="flex items-center space-x-4">
+          <div className="p-3 bg-blue-500 bg-opacity-20 rounded-lg">
+            <Icon className="w-6 h-6 text-blue-400" />
+          </div>
+          <div>
+            <p className="text-sm text-gray-400">{label}</p>
+            <div className="flex items-baseline space-x-2">
+              <motion.span
+                key={value}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="text-2xl font-bold text-white"
+              >
+                {value}
+              </motion.span>
+              {unit && (
+                <span className="text-sm text-gray-400">{unit}</span>
+              )}
+            </div>
+            {trend !== undefined && (
+              <div className={`text-sm ${
+                trend >= 0 ? 'text-green-400' : 'text-red-400'
+              }`}>
+                {trend > 0 ? '↑' : '↓'} {Math.abs(trend)}%
+              </div>
+            )}
+          </div>
+        </div>
+      </motion.div>
+    );
+  } catch (error) {
+    logger.error('Error rendering stat card:', error);
+    return null;
+  }
+};
+
+const PlatformStats: React.FC<{ stats: Stats }> = ({ stats }) => {
+  const statsConfig = [
+    {
+      icon: ChartBar,
+      label: 'Total Trades',
+      value: formatNumber(stats.totalTrades),
+      trend: 12.5,
+    },
+    {
+      icon: Activity,
+      label: 'Success Rate',
+      value: stats.successRate,
+      unit: '%',
+      trend: 2.3,
+    },
+    {
+      icon: TrendingUp,
+      label: 'Average Profit',
+      value: formatCurrency(stats.avgProfit),
+      unit: 'ETH',
+      trend: 15.7,
+    },
+    {
+      icon: Users,
+      label: 'Active Users',
+      value: formatNumber(stats.activeUsers),
+      trend: 8.9,
+    }
+  ];
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      {statsConfig.map((stat, index) => (
+        <StatCard
+          key={stat.label}
+          {...stat}
+          index={index}
+        />
+      ))}
+    </div>
+  );
+};
+
+export default PlatformStats;

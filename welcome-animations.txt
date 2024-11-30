@@ -1,0 +1,166 @@
+import { colors, effects } from './brand-utils';
+
+// Animation variants for main elements
+export const welcomeAnimations = {
+  container: {
+    initial: { opacity: 0 },
+    animate: {
+      opacity: 1,
+      transition: {
+        duration: 0.8,
+        staggerChildren: 0.2
+      }
+    }
+  },
+  logo: {
+    initial: { scale: 0.8, opacity: 0 },
+    animate: {
+      scale: 1,
+      opacity: 1,
+      transition: {
+        type: "spring",
+        stiffness: 200,
+        damping: 20
+      }
+    }
+  },
+  soundWave: {
+    initial: { scaleY: 0 },
+    animate: {
+      scaleY: 1,
+      transition: {
+        duration: 0.5,
+        yoyo: true,
+        repeat: Infinity
+      }
+    }
+  },
+  ethLogo: {
+    initial: { y: 20, opacity: 0 },
+    animate: (i) => ({
+      y: 0,
+      opacity: 1,
+      transition: {
+        delay: i * 0.2,
+        duration: 0.5
+      }
+    })
+  }
+};
+
+// Sound wave visualization configuration
+export const soundWaveConfig = {
+  barCount: 32,
+  minHeight: 10,
+  maxHeight: 100,
+  barWidth: 3,
+  barGap: 2,
+  colors: {
+    start: colors.primary.blue,
+    end: colors.accent.purple
+  }
+};
+
+// Generate waveform data
+export const generateWaveform = (amplitude = 1, frequency = 1) => {
+  return Array.from({ length: soundWaveConfig.barCount }, (_, i) => {
+    const progress = i / soundWaveConfig.barCount;
+    const wave = Math.sin(progress * Math.PI * 2 * frequency);
+    const height = ((wave + 1) / 2) * amplitude;
+    return {
+      height: soundWaveConfig.minHeight + 
+             (height * (soundWaveConfig.maxHeight - soundWaveConfig.minHeight)),
+      delay: progress * 0.5
+    };
+  });
+};
+
+// Particle system configuration
+export const particleSystem = {
+  count: 50,
+  size: {
+    min: 2,
+    max: 6
+  },
+  speed: {
+    min: 0.5,
+    max: 2
+  },
+  opacity: {
+    min: 0.3,
+    max: 0.7
+  },
+  colors: [
+    colors.primary.blue,
+    colors.secondary.turquoise,
+    colors.accent.yellow
+  ]
+};
+
+// Generate random particles
+export const generateParticles = () => {
+  return Array.from({ length: particleSystem.count }, () => ({
+    size: particleSystem.size.min + 
+          Math.random() * (particleSystem.size.max - particleSystem.size.min),
+    speed: particleSystem.speed.min + 
+           Math.random() * (particleSystem.speed.max - particleSystem.speed.min),
+    opacity: particleSystem.opacity.min + 
+            Math.random() * (particleSystem.opacity.max - particleSystem.opacity.min),
+    x: Math.random() * 100,
+    y: Math.random() * 100,
+    color: particleSystem.colors[
+      Math.floor(Math.random() * particleSystem.colors.length)
+    ]
+  }));
+};
+
+// Background grid configuration
+export const gridConfig = {
+  size: 40,
+  lineWidth: 1,
+  color: colors.primary.blue,
+  opacity: 0.1
+};
+
+// Generate grid pattern
+export const generateGridPattern = () => {
+  return `linear-gradient(to right, ${gridConfig.color} ${gridConfig.lineWidth}px, 
+          transparent ${gridConfig.lineWidth}px) 0 0 / ${gridConfig.size}px 100%,
+          linear-gradient(to bottom, ${gridConfig.color} ${gridConfig.lineWidth}px, 
+          transparent ${gridConfig.lineWidth}px) 0 0 / 100% ${gridConfig.size}px`;
+};
+
+// ETH logo animation states
+export const ethLogoStates = {
+  animate: {
+    opacity: [0.4, 1, 0.4],
+    scale: [0.95, 1.05, 0.95],
+    rotate: [0, 5, -5, 0],
+    transition: {
+      duration: 3,
+      repeat: Infinity,
+      ease: "easeInOut"
+    }
+  },
+  hover: {
+    scale: 1.1,
+    rotate: [0, 10, -10, 0],
+    transition: {
+      duration: 0.3
+    }
+  }
+};
+
+// Glow effect configuration
+export const glowEffects = {
+  primary: {
+    boxShadow: `0 0 20px ${colors.primary.blue}40,
+                0 0 40px ${colors.primary.blue}20,
+                0 0 60px ${colors.primary.blue}10`
+  },
+  secondary: {
+    boxShadow: `0 0 20px ${colors.secondary.turquoise}40,
+                0 0 40px ${colors.secondary.turquoise}20,
+                0 0 60px ${colors.secondary.turquoise}10`
+  }
+};

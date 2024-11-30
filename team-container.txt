@@ -1,0 +1,154 @@
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Users, Shield, Code, ChartBar } from 'lucide-react';
+import TeamMember from './TeamMember';
+import TeamStats from './TeamStats';
+import TeamBios from './TeamBios';
+
+const teamData = [
+  {
+    id: 1,
+    codename: 'Alpha',
+    role: 'Lead Developer',
+    expertise: ['Smart Contracts', 'AI Development', 'System Architecture'],
+    quote: "Building the future of automated trading, one line of code at a time.",
+    avatar: '/api/placeholder/120/120',
+    background: 'bg-gradient-to-br from-blue-600 to-purple-600'
+  },
+  {
+    id: 2,
+    codename: 'Omega',
+    role: 'AI Specialist',
+    expertise: ['Machine Learning', 'Neural Networks', 'Algorithm Development'],
+    quote: "Leveraging AI to revolutionize cryptocurrency trading.",
+    avatar: '/api/placeholder/120/120',
+    background: 'bg-gradient-to-br from-purple-600 to-pink-600'
+  },
+  {
+    id: 3,
+    codename: 'Delta',
+    role: 'Security Expert',
+    expertise: ['Smart Contract Security', 'Penetration Testing', 'Risk Analysis'],
+    quote: "Security is not a feature, it's a foundation.",
+    avatar: '/api/placeholder/120/120',
+    background: 'bg-gradient-to-br from-pink-600 to-red-600'
+  },
+  {
+    id: 4,
+    codename: 'Sigma',
+    role: 'Trading Strategist',
+    expertise: ['Market Analysis', 'Trading Algorithms', 'Risk Management'],
+    quote: "Where traditional trading meets artificial intelligence.",
+    avatar: '/api/placeholder/120/120',
+    background: 'bg-gradient-to-br from-blue-600 to-green-600'
+  }
+];
+
+import { usePerformanceMonitor } from '../hooks/usePerformanceMonitor';
+import { logger } from '../utils/logger';
+
+const TeamContainer = () => {
+  // Performance monitoring
+  const { trackRender, trackInteraction } = usePerformanceMonitor('TeamSection');
+
+  useEffect(() => {
+    trackRender('TeamContainer');
+    logger.info('Team section mounted');
+    
+    return () => {
+      logger.info('Team section unmounted');
+    };
+  }, []);
+  const [selectedMember, setSelectedMember] = useState(null);
+  const [activeSection, setActiveSection] = useState('members');
+
+  return (
+    <div className="min-h-screen relative overflow-hidden bg-gray-900">
+      {/* Background Effects */}
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 bg-gradient-to-b from-gray-900 via-blue-900/20 to-purple-900/20 opacity-50" />
+        <div className="absolute inset-0 bg-grid-pattern opacity-10" />
+      </div>
+
+      {/* Content */}
+      <div className="relative container mx-auto px-4 py-20">
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-16"
+        >
+          <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+            Our Team
+          </h2>
+          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+            A group of dedicated experts working to revolutionize cryptocurrency trading
+          </p>
+        </motion.div>
+
+        {/* Navigation Tabs */}
+        <div className="flex justify-center mb-12 space-x-4">
+          <button
+            onClick={() => setActiveSection('members')}
+            className={`px-6 py-2 rounded-lg transition-colors ${
+              activeSection === 'members'
+                ? 'bg-blue-600 text-white'
+                : 'text-gray-400 hover:text-white hover:bg-gray-800'
+            }`}
+          >
+            Team Members
+          </button>
+          <button
+            onClick={() => setActiveSection('stats')}
+            className={`px-6 py-2 rounded-lg transition-colors ${
+              activeSection === 'stats'
+                ? 'bg-blue-600 text-white'
+                : 'text-gray-400 hover:text-white hover:bg-gray-800'
+            }`}
+          >
+            Team Stats
+          </button>
+        </div>
+
+        {/* Content Sections */}
+        <AnimatePresence mode="wait">
+          {activeSection === 'members' ? (
+            <motion.div
+              key="members"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.5 }}
+              className="grid md:grid-cols-2 gap-8"
+            >
+              {teamData.map((member) => (
+                <TeamMember
+                  key={member.id}
+                  {...member}
+                  isSelected={selectedMember === member.id}
+                  onClick={() => setSelectedMember(member.id === selectedMember ? null : member.id)}
+                />
+              ))}
+            </motion.div>
+          ) : (
+            <motion.div
+              key="stats"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.5 }}
+            >
+              <TeamStats />
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Team Bios */}
+        <TeamBios teamData={teamData} selectedMember={selectedMember} />
+      </div>
+    </div>
+  );
+};
+
+export default TeamContainer;

@@ -1,0 +1,178 @@
+import { logger } from '../utils/logger';
+
+// Component tree traversal utilities
+export const traverseTree = (node, callback) => {
+  callback(node);
+  if (node.children) {
+    node.children.forEach(child => traverseTree(child, callback));
+  }
+};
+
+// Search utilities
+export const searchTree = (node, searchTerm) => {
+  const matches = (node) => {
+    return node.name.toLowerCase().includes(searchTerm.toLowerCase());
+  };
+
+  const search = (node) => {
+    if (!node) return null;
+
+    const nodeMatches = matches(node);
+    const matchingChildren = node.children
+      ?.map(child => search(child))
+      .filter(Boolean);
+
+    if (nodeMatches || (matchingChildren && matchingChildren.length > 0)) {
+      return {
+        ...node,
+        children: matchingChildren || []
+      };
+    }
+
+    return null;
+  };
+
+  try {
+    return search(node);
+  } catch (error) {
+    logger.error('Error searching component tree:', error);
+    return node;
+  }
+};
+
+// Performance analysis utilities
+export const analyzePerformance = (node) => {
+  let issues = [];
+
+  const analyze = (node, path = []) => {
+    const currentPath = [...path, node.name];
+
+    // Check render count
+    if (node.renderCount > 5) {
+      issues.push({
+        type: 'high-renders',
+        component: node.name,
+        path: currentPath,
+        value: node.renderCount,
+        message: `High render count (${node.renderCount} renders)`
+      });
+    }
+
+    // Check render time
+    if (node.renderTime > 16) {
+      issues.push({
+        type: 'slow-renders',
+        component: node.name,
+        path: currentPath,
+        value: node.renderTime,
+        message: `Slow render time (${node.renderTime.toFixed(2)}ms)`
+      });
+    }
+
+    // Check memory usage
+    if (node.memoryUsage > 1000000) {
+      issues.push({
+        type: 'memory-issues',
+        component: node.name,
+        path: currentPath,
+        value: node.memoryUsage,
+        message: `High memory usage (${(node.memoryUsage / 1024 / 1024).toFixed(2)}MB)`
+      });
+    }
+
+    // Recursive analysis of children
+    if (node.children) {
+      node.children.forEach(child => analyze(child, currentPath));
+    }
+  };
+
+  try {
+    analyze(node);
+    return issues;
+  } catch (error) {
+    logger.error('Error analyzing component performance:', error);
+    return [];
+  }
+};
+
+// Tree manipulation utilities
+export const updateNode = (tree, nodeId, updates) => {
+  const update = (node) => {
+    if (node.id === nodeId) {
+      return { ...node, ...updates };
+    }
+    if (node.children) {
+      return {
+        ...node,
+        children: node.children.map(update)
+      };
+    }
+    return node;
+  };
+
+  try {
+    return update(tree);
+  } catch (error) {
+    logger.error('Error updating component tree node:', error);
+    return tree;
+  }
+};
+
+// Component path utilities
+export const getNodePath = (tree, nodeId) => {
+  const findPath = (node, id, path = []) => {
+    if (node.id === id) {
+      return [...path, node.name];
+    }
+    if (node.children) {
+      for (const child of node.children) {
+        const childPath = findPath(child, id, [...path, node.name]);
+        if (childPath) return childPath;
+      }
+    }
+    return null;
+  };
+
+  try {
+    return findPath(tree, nodeId) || [];
+  } catch (error) {
+    logger.error('Error finding component path:', error);
+    return [];
+  }
+};
+
+// Statistics utilities
+export const calculateTreeStats = (tree) => {
+  let stats = {
+    totalComponents: 0,
+    totalRenders: 0,
+    averageRenderTime: 0,
+    totalMemoryUsage: 0,
+    maxDepth: 0,
+    renderTimesByComponent: {},
+    memoryUsageByComponent: {}
+  };
+
+  const calculate = (node, depth = 0) => {
+    stats.totalComponents++;
+    stats.totalRenders += node.renderCount || 0;
+    stats.totalMemoryUsage += node.memoryUsage || 0;
+    stats.maxDepth = Math.max(stats.maxDepth, depth);
+
+    stats.renderTimesByComponent[node.name] = node.renderTime || 0;
+    stats.memoryUsageByComponent[node.name] = node.memoryUsage || 0;
+
+    if (node.children) {
+      node.children.forEach(child => calculate(child, depth + 1));
+    }
+  };
+
+  try {
+    calculate(tree);
+    stats.averageRenderTime = stats.totalRenders / stats.totalComponents;
+    return stats;
+  } catch (error) {
+    logger.error('Error calculating component tree statistics:', error);
+    return stats;
+  }
+};

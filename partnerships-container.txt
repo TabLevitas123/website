@@ -1,0 +1,169 @@
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { HandShake, Building, ChevronRight, ExternalLink } from 'lucide-react';
+import PartnerCard from './PartnerCard';
+import PartnershipStats from './PartnershipStats';
+import PartnershipDetails from './PartnershipDetails';
+
+const partnerData = [
+  {
+    id: 'dextools',
+    name: 'DexTools',
+    logo: '/api/placeholder/120/120',
+    type: 'Analytics Partner',
+    description: 'Leading DeFi analytics and trading platform',
+    integrations: [
+      'Real-time market data integration',
+      'Trading pair analytics',
+      'Price chart integration',
+      'Market sentiment analysis'
+    ],
+    link: 'https://www.dextools.io',
+    color: 'from-blue-500 to-indigo-500'
+  },
+  {
+    id: 'dexscreener',
+    name: 'DexScreener',
+    logo: '/api/placeholder/120/120',
+    type: 'Market Data Partner',
+    description: 'Comprehensive DEX analytics and screening platform',
+    integrations: [
+      'Market data feeds',
+      'Token pair analytics',
+      'Liquidity analysis',
+      'Trade volume tracking'
+    ],
+    link: 'https://dexscreener.com',
+    color: 'from-purple-500 to-pink-500'
+  },
+  {
+    id: 'dwg',
+    name: 'DWG Labs',
+    logo: '/api/placeholder/120/120',
+    type: 'Technology Partner',
+    description: 'Blockchain development and security solutions',
+    integrations: [
+      'Smart contract auditing',
+      'Security infrastructure',
+      'Technical consulting',
+      'Development support'
+    ],
+    link: 'https://dwg.labs',
+    color: 'from-green-500 to-teal-500'
+  },
+  {
+    id: 'bybit',
+    name: 'ByBit',
+    logo: '/api/placeholder/120/120',
+    type: 'Exchange Partner',
+    description: 'Leading cryptocurrency derivatives exchange',
+    integrations: [
+      'Trading API integration',
+      'Market data access',
+      'Cross-platform compatibility',
+      'Liquidity provision'
+    ],
+    link: 'https://www.bybit.com',
+    color: 'from-yellow-500 to-orange-500'
+  }
+];
+
+const PartnershipsContainer = () => {
+  const [selectedPartner, setSelectedPartner] = useState(null);
+  const [activeSection, setActiveSection] = useState('overview');
+
+  return (
+    <div className="min-h-screen relative overflow-hidden bg-gray-900">
+      {/* Background Effects */}
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 bg-gradient-to-b from-gray-900 via-blue-900/20 to-purple-900/20 opacity-50" />
+        <div className="absolute inset-0 bg-grid-pattern opacity-10" />
+      </div>
+
+      {/* Content */}
+      <div className="relative container mx-auto px-4 py-20">
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-16"
+        >
+          <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+            Strategic Partnerships
+          </h2>
+          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+            Collaborating with industry leaders to deliver exceptional trading solutions
+          </p>
+        </motion.div>
+
+        {/* Navigation Tabs */}
+        <div className="flex justify-center mb-12 space-x-4">
+          <button
+            onClick={() => setActiveSection('overview')}
+            className={`px-6 py-2 rounded-lg transition-colors ${
+              activeSection === 'overview'
+                ? 'bg-blue-600 text-white'
+                : 'text-gray-400 hover:text-white hover:bg-gray-800'
+            }`}
+          >
+            Partners Overview
+          </button>
+          <button
+            onClick={() => setActiveSection('stats')}
+            className={`px-6 py-2 rounded-lg transition-colors ${
+              activeSection === 'stats'
+                ? 'bg-blue-600 text-white'
+                : 'text-gray-400 hover:text-white hover:bg-gray-800'
+            }`}
+          >
+            Partnership Stats
+          </button>
+        </div>
+
+        {/* Content Sections */}
+        <AnimatePresence mode="wait">
+          {activeSection === 'overview' ? (
+            <motion.div
+              key="overview"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.5 }}
+              className="grid md:grid-cols-2 gap-8"
+            >
+              {partnerData.map((partner) => (
+                <PartnerCard
+                  key={partner.id}
+                  {...partner}
+                  isSelected={selectedPartner === partner.id}
+                  onClick={() => setSelectedPartner(partner.id === selectedPartner ? null : partner.id)}
+                />
+              ))}
+            </motion.div>
+          ) : (
+            <motion.div
+              key="stats"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.5 }}
+            >
+              <PartnershipStats partners={partnerData} />
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Partner Details */}
+        {selectedPartner && (
+          <PartnershipDetails
+            partner={partnerData.find(p => p.id === selectedPartner)}
+            onClose={() => setSelectedPartner(null)}
+          />
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default PartnershipsContainer;

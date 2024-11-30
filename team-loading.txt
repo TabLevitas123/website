@@ -1,0 +1,49 @@
+import React from 'react';
+import { motion } from 'framer-motion';
+
+const TeamLoading = () => {
+  return (
+    <div className="min-h-[400px] grid grid-cols-1 md:grid-cols-2 gap-6">
+      {[...Array(4)].map((_, i) => (
+        <motion.div
+          key={i}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: i * 0.1 }}
+          className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 relative overflow-hidden"
+        >
+          {/* Header Skeleton */}
+          <div className="flex items-start space-x-4 mb-6">
+            <div className="w-16 h-16 rounded-lg bg-gray-700/50 animate-pulse" />
+            <div className="flex-1 space-y-2">
+              <div className="h-6 w-32 bg-gray-700/50 rounded animate-pulse" />
+              <div className="h-4 w-24 bg-gray-700/50 rounded animate-pulse" />
+            </div>
+          </div>
+
+          {/* Content Skeleton */}
+          <div className="space-y-3">
+            <div className="h-4 w-full bg-gray-700/50 rounded animate-pulse" />
+            <div className="h-4 w-5/6 bg-gray-700/50 rounded animate-pulse" />
+            <div className="h-4 w-4/6 bg-gray-700/50 rounded animate-pulse" />
+          </div>
+
+          {/* Loading Animation */}
+          <motion.div
+            className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent"
+            animate={{
+              x: ['-100%', '100%'],
+            }}
+            transition={{
+              duration: 1.5,
+              repeat: Infinity,
+              ease: 'linear',
+            }}
+          />
+        </motion.div>
+      ))}
+    </div>
+  );
+};
+
+export default TeamLoading;
